@@ -153,23 +153,6 @@ class KickGen:
 
         return buf
 
-    def analyze_repo_config(self, filename):
-        fd = open(filename)
-        data = fd.read()
-        lines = data.split("\n")
-        ret = False
-        baseurl = None
-        for line in lines:
-            if line.find("ks_mirror") != -1:
-                ret = True
-            if line.find("baseurl") != -1:
-                try:
-                    first, baseurl = line.split("=",1)
-                except:
-                    raise CX(_("error scanning repo: %s" % filename))
-        fd.close()
-        return (ret, baseurl)
-
     def get_repo_baseurl(self, server, repo_name, is_repo_mirror=True):
         """
         Construct the URL to a repo definition.
