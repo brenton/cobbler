@@ -145,17 +145,11 @@ class KickGen:
         configs = self.get_repo_filenames(obj,is_profile)
         repos = self.repos
 
-        # FIXME: this really should be dynamically generated as with the kickstarts
-        for c in configs:
-           name = c.split("/")[-1].replace(".repo","")
-           (is_core, baseurl) = self.analyze_repo_config(c)
-           for repo in repos:
-               if repo.name == name:
-                   if not repo.yumopts.has_key('enabled') or repo.yumopts['enabled'] == '1':
-                       if repo.mirror_locally:
-                           buf = buf + "repo --name=%s --baseurl=%s\n" % (name, baseurl)
-                       else:
-                           buf = buf + "repo --name=%s --baseurl=%s\n" % (name, repo.mirror)
+        repos = blended["repos"]
+
+        for repo in repos:
+            baseurl = self.get_repo_baseurl(self.api.settings().server, repo)
+            buf = buf + "repo --name=%s --baseurl=%s\n" % (repo, baseurl)
 
         return buf
 
